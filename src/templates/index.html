@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Query Service</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .upload-btn {
+      margin: 20px 0;
+    }
+
+    .results {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Upload an Image</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" id="imageInput" name="file" accept="image/*" required>
+      <button type="submit" class="upload-btn">Upload Image</button>
+    </form>
+    <div id="results" class="results">
+      <!-- Results will be displayed here -->
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('uploadForm').onsubmit = async function (e) {
+      e.preventDefault(); // Prevent the default form submit action
+      const formData = new FormData(this); // Create a FormData object from the form
+      const response = await fetch('/upload', { // Send the form data to your Flask endpoint
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.json(); // Parse the JSON response
+      displayResults(result); // Display the results
+    };
+
+    function displayResults(results) {
+      const resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = ''; // Clear previous results
+
+      // Assuming 'results' is an array of objects:
+      if (results.length > 0) {
+        results.forEach(item => {
+          // Create elements for each piece of data
+          const container = document.createElement('div');
+          container.className = 'result-item'; // Add a class for styling if desired
+
+          const imgElement = document.createElement('img');
+          imgElement.src = 'img/' + item.img_name;
+          imgElement.alt = 'Similar Image';
+          imgElement.style.maxWidth = '100%';
+          imgElement.style.marginTop = '10px';
+
+          const vidIdElement = document.createElement('p');
+          vidIdElement.textContent = 'Video ID: ' + item.vidid;
+
+          const frameNumElement = document.createElement('p');
+          frameNumElement.textContent = 'Frame Number: ' + item.frameNum;
+
+          const timestampElement = document.createElement('p');
+          timestampElement.textContent = 'Timestamp: ' + item.timestamp;
+
+          const detectedObjClassElement = document.createElement('p');
+          detectedObjClassElement.textContent = 'Detected Object: ' + item.detectedObjClass;
+
+          const cosineSimilarityElement = document.createElement('p');
+          cosineSimilarityElement.textContent = 'Cosine Similarity: ' + item.cosine_similarity.toFixed(3);
+
+          // Append all elements to the container
+          container.appendChild(imgElement);
+          container.appendChild(vidIdElement);
+          container.appendChild(frameNumElement);
+          container.appendChild(timestampElement);
+          container.appendChild(detectedObjClassElement);
+          container.appendChild(cosineSimilarityElement);
+
+          // Append the container to the results container
+          resultsContainer.appendChild(container);
+        });
+      } else {
+        resultsContainer.innerHTML = '<p>No similar images found.</p>'; // Display a message if no results
+      }
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+pytube
+opencv-python
+ultralytics
+scipy
+numpy
+matplotlib
+jupyter
+pandas
+psycopg2-binary
+Flask
+werkzeug
+pillow
+gitpython
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch

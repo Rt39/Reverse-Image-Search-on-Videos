@@ -1,0 +1,21 @@
+data/videos/
+data/models/
+data/obj_imgs/
+
+# PyTorch
+*.pth
+*.pt
+
+# Conda
+.env
+.conda
+conda-meta/
+.envs/
+.envrc
+.history
+.pytest_cache/
+__pycache__/
+
+# MacOS
+.DS_Store
+__MACOSX/
